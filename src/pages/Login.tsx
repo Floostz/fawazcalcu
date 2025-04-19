@@ -1,7 +1,7 @@
 import { A, useNavigate } from '@solidjs/router';
 import styles from './Login.module.css';
 import { auth } from '../firebase/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword,GoogleAuthProvider,signInWithPopup } from 'firebase/auth';
 import { createSignal } from 'solid-js';
 
 export default function Login() {
@@ -21,10 +21,28 @@ export default function Login() {
       setError(err.message);
     }
   };
- 
+  const handleGoogleSignup = async () => {
+     const provider = new GoogleAuthProvider();
+     try {
+       await signInWithPopup(auth, provider);
+       navigate('/dashboard');
+     } catch (err: any) {
+       setError(err.message);
+     }
+   };
   return (
-    <div class={styles.container}>
-      {/* ... background and nav omitted for brevity ... */}
+   
+      <div class={styles.container}>
+      <div class={styles.background}>
+        <div class={`${styles.circle} ${styles.circle1}`}></div>
+        <div class={`${styles.circle} ${styles.circle2}`}></div>
+      </div>
+      <nav class={styles.nav}>
+        <A href="/" class={styles.logo}>
+          <span>Calc.Rais</span>
+        </A>
+      </nav>
+
       <div class={styles.formCard}>
         <div class={styles.header}>
           <h1 class={styles.title}>Welcome Back</h1>
@@ -56,9 +74,14 @@ export default function Login() {
           <div class={styles.dividerLine}></div>
         </div>
         
-        <button class={styles.submitButton} style="background: rgba(255,255,255,0.1); color: #e2e8f0;">
-          Continue with Google
+        <button
+          class={styles.submitButton}
+          style="background: rgba(255,255,255,0.1); color: #e2e8f0;"
+          onClick={handleGoogleSignup}
+        >
+          Login with Google
         </button>
+
         
         <div class={styles.footer}>
           Don't have an account? <A href="/register" class={styles.footerLink}>Create account</A>

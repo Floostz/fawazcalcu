@@ -28,7 +28,13 @@ export default function Demo() {
     setDisplay('0');
     setExpression('');
   };
-
+  function formatNumber(numStr: string) {
+    const num = Number(numStr);
+    if (!isNaN(num) && Math.abs(num) >= 100) {
+      return num.toLocaleString('de-DE'); // Uses dot as thousand separator
+    }
+    return numStr;
+  }
   const handleEquals = () => {
     const fullExpression = expression() + display();
     try {
@@ -74,7 +80,8 @@ export default function Demo() {
           <div class={styles.calculatorCard}>
             <div class={styles.calculatorScreen}>
               <div class={styles.result}>
-                {expression() ? `${expression()} ${display()}` : display()}
+              {expression() ? `${expression()} ${formatNumber(display())}` : formatNumber(display())}
+
               </div>
             </div>
             
@@ -149,7 +156,7 @@ export default function Demo() {
               Advanced Features
             </div>
             <p class={styles.featureDescription}>
-              Upgrade to unlock scientific calculations, unit conversions, and sync your calculation history across devices.
+             For more feature you can login for access the advanced feature
             </p>
           </div>
         </div>
@@ -160,8 +167,8 @@ export default function Demo() {
             <For each={history()}>
               {(item) => (
                 <div class={styles.historyItem}>
-                  <div class={styles.historyExpression}>{item.expression}</div>
-                  <div class={styles.historyResult}>{item.result}</div>
+        <div class={styles.historyExpression}>{item.expression}</div>
+        <div class={styles.historyResult}>{formatNumber(item.result)}</div>
                 </div>
               )}
             </For>

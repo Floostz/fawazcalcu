@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged,signInAnonymously  } from "firebase/auth";
-import { getFirestore, collection, addDoc, query, orderBy, getDocs, where } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, query, orderBy, getDocs, where, serverTimestamp  } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyD2N-DBd1w-akmB61nXcB63r097Ch7uON0",
@@ -44,6 +44,7 @@ export async function addCalculationToHistory(calculation, result) {
         userId: currentUser.uid,
         calculation,
         result,
+        
         timestamp: new Date()
       });
       

@@ -1,27 +1,27 @@
 import { A, useNavigate } from '@solidjs/router';
-import { createSignal, Show } from 'solid-js';
+import { createSignal, createEffect, Show } from 'solid-js';
 import styles from './Dashboard.module.css';
 import { StandardCalculator } from '../components/Standart';
 import { HistoryComponent } from '../components/History';
-
-
-
-function ScientificCalculator() {
-  return <div class={styles.calculatorPlaceholder}>Scientific Calculator Coming Soon</div>;
-}
-
-function ProgrammerCalculator() {
-  return <div class={styles.calculatorPlaceholder}>Programmer Calculator Coming Soon</div>;
-}
-
-function DateCalculator() {
-  return <div class={styles.calculatorPlaceholder}>Date Calculator Coming Soon</div>;
-}
+import { ScientificCalculator } from '../components/Scientifict';
+import { DateCalculator } from '../components/DateCalculator';
+import { auth, getCurrentUser } from '../firebase/firebase'; // Import the necessary Firebase functions
 
 export default function Dashboard() {
   const [selectedCalculator, setSelectedCalculator] = createSignal('standard');
   const [isSidebarOpen, setSidebarOpen] = createSignal(true);
+  const [user, setUser] = createSignal(null);
   const navigate = useNavigate();
+
+  // Fetch current user on component mount
+  createEffect(async () => {
+    try {
+      const currentUser = await getCurrentUser();
+      setUser(currentUser);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  });
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen());
@@ -32,8 +32,13 @@ export default function Dashboard() {
   };
 
   const handleLogout = () => {
-    // Navigate to home page on logout
-    navigate('/');
+    // Sign out the user before navigating
+    auth.signOut().then(() => {
+      // Navigate to home page on logout
+      navigate('/');
+    }).catch((error) => {
+      console.error("Error signing out:", error);
+    });
   };
 
   const renderCalculator = () => {
@@ -42,8 +47,6 @@ export default function Dashboard() {
         return <StandardCalculator />;
       case 'scientific':
         return <ScientificCalculator />;
-      case 'programmer':
-        return <ProgrammerCalculator />;
       case 'date':
         return <DateCalculator />;
       case 'history':
@@ -51,6 +54,23 @@ export default function Dashboard() {
       default:
         return <StandardCalculator />;
     }
+  };
+
+  // Generate a display name for the user
+  const getUserDisplayName = () => {
+    if (!user()) return "Guest User";
+    
+    // If the user has a display name, use it
+    if (user().displayName) return user().displayName;
+    
+    // If user is anonymous, create a friendly anonymous ID
+    if (user().isAnonymous) {
+      // Use the first 5 characters of the UID to create a unique anonymous ID
+      return `Guest ${user().uid.substring(0, 5)}`;
+    }
+    
+    // Fall back to email or UID
+    return user().email || `User ${user().uid.substring(0, 5)}`;
   };
 
   return (
@@ -73,6 +93,13 @@ export default function Dashboard() {
         <aside class={`${styles.sidebar} ${isSidebarOpen() ? styles.sidebarOpen : ''}`}>
           <div class={styles.sidebarHeader}>
             <h2>Dashboard</h2>
+            {/* User profile display */}
+            <div class={styles.userProfile}>
+              <div class={styles.userAvatar}>
+                {getUserDisplayName().charAt(0).toUpperCase()}
+              </div>
+              <div class={styles.userName}>{getUserDisplayName()}</div>
+            </div>
           </div>
           
           <div class={styles.sidebarMenu}>
@@ -90,12 +117,6 @@ export default function Dashboard() {
                   onClick={() => handleCalculatorChange('scientific')}
                 >
                   Scientific
-                </button>
-                <button 
-                  class={`${styles.calculatorOption} ${selectedCalculator() === 'programmer' ? styles.active : ''}`}
-                  onClick={() => handleCalculatorChange('programmer')}
-                >
-                  Programmer
                 </button>
                 <button 
                   class={`${styles.calculatorOption} ${selectedCalculator() === 'date' ? styles.active : ''}`}
