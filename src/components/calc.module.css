@@ -1,0 +1,94 @@
+.calculatorCard {
+    background-color: #1e1e2f;
+    padding: 1.5rem;
+    border-radius: 12px;
+    width: 320px;
+    margin: auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .calculatorTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  .calculatorContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .calculatorComponent {
+    background-color: #2a2a3d;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+  
+  .calculatorDisplay {
+    background-color: #111;
+    color: #0f0;
+    font-size: 1.5rem;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    text-align: right;
+    min-height: 2.5rem;
+  }
+  
+  .calculatorKeypad {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .calculatorRow {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  
+  .calculatorKey {
+    background-color: #3b3b52;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    flex: 1;
+    transition: background 0.2s ease;
+  }
+  
+  .calculatorKey:hover {
+    background-color: #50507a;
+  }
+  
+  .digitKey {
+    background-color: #444;
+  }
+  
+  .digitKey:hover {
+    background-color: #666;
+  }
+  
+  .functionKey {
+    background-color: #f39c12;
+    color: #000;
+  }
+  
+  .functionKey:hover {
+    background-color: #e67e22;
+  }
+  
+  .equalsKey {
+    background-color: #27ae60;
+    color: white;
+  }
+  
+  .equalsKey:hover {
+    background-color: #1e8449;
+  }
+  
